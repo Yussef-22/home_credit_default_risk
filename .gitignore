@@ -1,0 +1,15 @@
+# Dataset
+data/
+
+# Python
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# PostgreSQL
+*.db
