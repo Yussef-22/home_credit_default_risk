@@ -151,3 +151,49 @@ Más adelante utilizaremos esta clasificación para comparar
 las tasas de incumplimiento entre clientes de ingresos altos
 e ingresos bajos.
 */
+
+
+-- =====================================================
+-- 6. Incumplimiento por categoría de ingreso
+-- =====================================================
+
+SELECT
+    categoria_ingreso,
+    COUNT(*) AS clientes_totales,
+    SUM("TARGET") AS clientes_incumplidos,
+    ROUND(
+        SUM("TARGET") * 100.0 / COUNT(*),
+        2
+    ) AS porcentaje_incumplimiento
+FROM
+(
+    SELECT
+        "AMT_INCOME_TOTAL" AS ingreso,
+        "TARGET",
+        CASE
+            WHEN "AMT_INCOME_TOTAL" >
+            (
+                SELECT AVG("AMT_INCOME_TOTAL")
+                FROM public.application_train
+            )
+            THEN 'alto'
+            ELSE 'bajo'
+        END AS categoria_ingreso
+    FROM public.application_train
+) AS clientes
+GROUP BY categoria_ingreso;
+
+/*
+Interpretación:
+
+Los clientes fueron segmentados en dos grupos según si su ingreso
+está por encima o por debajo del ingreso promedio del dataset.
+
+Posteriormente se calculó el porcentaje de incumplimiento para cada
+grupo con el objetivo de evaluar si el nivel de ingresos parece
+estar relacionado con el riesgo crediticio.
+
+Este tipo de análisis permite identificar segmentos de clientes
+con diferentes niveles de riesgo antes de construir un modelo
+predictivo.
+*/
