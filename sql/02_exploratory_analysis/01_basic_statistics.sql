@@ -197,3 +197,30 @@ Este tipo de análisis permite identificar segmentos de clientes
 con diferentes niveles de riesgo antes de construir un modelo
 predictivo.
 */
+
+-- =====================================================
+-- 7. Incumplimiento por nivel educativo
+-- =====================================================
+
+SELECT
+    "NAME_EDUCATION_TYPE",
+    COUNT(*) AS clientes_totales,
+    SUM("TARGET") AS clientes_incumplidos,
+    ROUND(
+        SUM("TARGET") * 100.0 / COUNT(*),
+        2
+    ) AS porcentaje_incumplimiento
+FROM public.application_train
+GROUP BY "NAME_EDUCATION_TYPE"
+ORDER BY porcentaje_incumplimiento DESC;
+
+/*
+Interpretación:
+
+El nivel educativo presenta diferencias importantes en el porcentaje
+de incumplimiento. Lower secondary presenta la tasa más alta (10.93%),
+mientras que Academic degree presenta la más baja (1.83%).
+
+Esto sugiere que el nivel educativo podría ser una variable relevante
+para la evaluación del riesgo crediticio. Sin embargo, esta relación
+no implica causalidad y debe analizarse junto con otras variables.
